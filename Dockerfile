@@ -39,6 +39,8 @@ libsasl2-modules-db \
 && rm -rf /var/lib/apt/lists/*
 
 #Copie et execution du script pour l'installation et l'initialisation de GLPI
+ADD config/default-ssl.conf /etc/apache2/sites-enabled/default-ssl.conf
+ADD config/000-default.conf /etc/apache2/sites-enabled/000-default.conf
 RUN mkdir -p /etc/apache2/ssl
 COPY ssl/*  /etc/apache2/ssl/
 RUN a2ensite default-ssl
