@@ -1,7 +1,7 @@
 #On choisit une debian
 FROM debian:11.6
 
-LABEL org.opencontainers.image.authors="github@diouxx.be"
+#LABEL org.opencontainers.image.authors="github@diouxx.be"
 
 
 #Ne pas poser de question à l'installation
@@ -39,6 +39,10 @@ libsasl2-modules-db \
 && rm -rf /var/lib/apt/lists/*
 
 #Copie et execution du script pour l'installation et l'initialisation de GLPI
+RUN mkdir -p /etc/apache2/ssl
+COPY ssl/*  /etc/apache2/ssl/
+RUN a2ensite default-ssl
+
 COPY glpi-start.sh /opt/
 RUN chmod +x /opt/glpi-start.sh
 ENTRYPOINT ["/opt/glpi-start.sh"]

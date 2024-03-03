@@ -57,6 +57,69 @@ else
   set +H
   echo -e "<VirtualHost *:80>\n\tDocumentRoot /var/www/html/glpi/public\n\n\t<Directory /var/www/html/glpi/public>\n\t\tRequire all granted\n\t\tRewriteEngine On\n\t\tRewriteCond %{REQUEST_FILENAME} !-f\n\t\n\t\tRewriteRule ^(.*)$ index.php [QSA,L]\n\t</Directory>\n\n\tErrorLog /var/log/apache2/error-glpi.log\n\tLogLevel warn\n\tCustomLog /var/log/apache2/access-glpi.log combined\n</VirtualHost>" > /etc/apache2/sites-available/000-default.conf
 fi
+# remove file: install/install.php
+if [ $INSTALL -eq 0 ]; then
+    rm -rf /var/www/html/glpi/install
+fi
+
+###  000-default.conf
+
+cat <<EOF > /etc/apache2/sites-available/000-default.conf 
+<VirtualHost *:80>
+        ServerName glpi.quotech.lab
+        Redirect 301 / https://glpi.quotech.lab
+		DocumentRoot /var/www/html/glpi/public
+		<Directory /var/www/html/glpi/public>
+                Require all granted
+                RewriteEngine On
+                RewriteCond %{REQUEST_FILENAME} !-f
+
+                RewriteRule ^(.*)$ index.php [QSA,L]
+        </Directory>
+
+        ErrorLog /var/log/apache2/error-glpi.log
+        LogLevel warn
+        CustomLog /var/log/apache2/access-glpi.log combined
+		
+</VirtualHost>
+<VirtualHost *:443>
+        SSLEngine on
+        SSLCertificateFile /etc/apache2/ssl/glpi.quotech.lab.crt
+        SSLCertificateKeyFile /etc/apache2/ssl/glpi.quotech.lab.key
+        SSLCertificateChainFile /etc/apache2/ssl/intermediate-ca.crt     
+        ServerName glpi.quotech.lab        
+        ServerAlias glpi.quotech.lab        
+        DocumentRoot /var/www/html/glpi/public       
+</VirtualHost>
+EOF
+
+## default-ssl.conf
+
+cat <<EOF >  /etc/apache2/sites-enabled/default-ssl.conf
+
+<IfModule mod_ssl.c>
+        <VirtualHost _default_:443>
+                ServerAdmin webmaster@localhost
+				ServerName  glpi.quotech.lab
+                DocumentRoot /var/www/html/glpi/public
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+                SSLEngine on
+                #SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
+                #SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+                SSLCertificateFile /etc/apache2/ssl/glpi.quotech.lab.crt
+                SSLCertificateKeyFile /etc/apache2/ssl/glpi.quotech.lab.key
+				SSLCertificateChainFile /etc/apache2/ssl/intermediate-ca.crt
+                <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                                SSLOptions +StdEnvVars
+                </FilesMatch>
+                <Directory /usr/lib/cgi-bin>
+                                SSLOptions +StdEnvVars
+                </Directory>
+
+        </VirtualHost>
+</IfModule>	
+EOF
 
 #Add scheduled task by cron and enable
 echo "*/2 * * * * www-data /usr/bin/php /var/www/html/glpi/front/cron.php &>/dev/null" > /etc/cron.d/glpi
