@@ -38,12 +38,23 @@ libsasl2-modules \
 libsasl2-modules-db \
 && rm -rf /var/lib/apt/lists/*
 
+# Copia archvios 
+COPY ./conf/apache2/ssl/glpi.key /etc/apache2/ssl/glpi.key
+COPY ./conf/apache2/ssl/glpi.bancounion.com.cer /etc/apache2/ssl/glpi.bancounion.com.cer
+
+COPY ./conf/apache2/sites-available/glpi.quotech.local.conf /etc/apache2/sites-available/glpi.quotech.local.conf
+COPY ./conf/apache2/sites-available/glpi.quotech.local-ssl.conf/etc/apache2/sites-available/glpi.quotech.local-ssl.conf
+
+#RUN ln -s /etc/apache2/mods-available/ssl.load  /etc/apache2/mods-enabled/ssl.load
+#RUN a2enmod rewrite
+#RUN a2enmod mime
+#RUN a2ensite glpi.quotech.local.conf
+#RUN a2ensite glpi.quotech.local-ssl.conf
+
+
 #RUN a2enmod ssl && a2enmod rewrite
+
 #Copie et execution du script pour l'installation et l'initialisation de GLPI
-RUN mkdir -p /etc/apache2/ssl
-COPY ./ssl/* /etc/apache2/ssl/
-COPY ./apache/glpi.conf /etc/apache2/sites-available/glpi.conf
-COPY ./apache/glpi.conf /etc/apache2/sites-enabled/glpi.conf
 
 COPY glpi-start.sh /opt/
 RUN chmod +x /opt/glpi-start.sh
