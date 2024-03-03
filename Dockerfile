@@ -42,7 +42,8 @@ libsasl2-modules-db \
 #Copie et execution du script pour l'installation et l'initialisation de GLPI
 RUN mkdir -p /etc/apache2/ssl
 COPY ./ssl/* /etc/apache2/ssl/
-COPY ./apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY ./apache/glpi.conf /etc/apache2/sites-available/glpi.conf
+COPY ./apache/glpi.conf /etc/apache2/sites-enabled/glpi.conf
 
 COPY glpi-start.sh /opt/
 RUN chmod +x /opt/glpi-start.sh
