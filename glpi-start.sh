@@ -64,8 +64,8 @@ echo "*/2 * * * * www-data /usr/bin/php /var/www/html/glpi/front/cron.php &>/dev
 service cron start
 
 #Activation du module rewrite d'apache
-a2enmod rewrite && service apache2 restart && service apache2 stop
-
+#a2enmod rewrite && service apache2 restart && service apache2 stop
+service apache2 restart && service apache2 stop
 #Fix to really stop apache
 pkill -9 apache
 
