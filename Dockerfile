@@ -42,8 +42,8 @@ libsasl2-modules-db \
 COPY ./conf/apache2/ssl/glpi.key /etc/apache2/ssl/glpi.key
 COPY ./conf/apache2/ssl/glpi.bancounion.com.cer /etc/apache2/ssl/glpi.bancounion.com.cer
 
-COPY ./conf/apache2/sites-available/glpi.quotech.local.conf /etc/apache2/sites-available/glpi.quotech.local.conf
-COPY ./conf/apache2/sites-available/glpi.quotech.local-ssl.conf/etc/apache2/sites-available/glpi.quotech.local-ssl.conf
+COPY ./conf/apache2/sites-available/glpi.quotech.local.conf  /etc/apache2/sites-available/glpi.quotech.local.conf
+COPY ./conf/apache2/sites-available/glpi.quotech.local-ssl.conf  /etc/apache2/sites-available/glpi.quotech.local-ssl.conf
 
 #RUN ln -s /etc/apache2/mods-available/ssl.load  /etc/apache2/mods-enabled/ssl.load
 #RUN a2enmod rewrite
