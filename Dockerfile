@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 #Installation d'apache et de php8.1 avec extension
 RUN apt update \
-&& apt install --yes ca-certificates apt-transport-https lsb-release wget curl \
+&& apt install --yes ca-certificates apt-transport-https lsb-release wget curl nano \
 && curl -sSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg \ 
 && sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list' \
 && apt update \
@@ -38,7 +38,7 @@ libsasl2-modules \
 libsasl2-modules-db \
 && rm -rf /var/lib/apt/lists/*
 
-RUN a2enmod ssl && a2enmod rewrite
+#RUN a2enmod ssl && a2enmod rewrite
 #Copie et execution du script pour l'installation et l'initialisation de GLPI
 RUN mkdir -p /etc/apache2/ssl
 COPY ./ssl/* /etc/apache2/ssl/
