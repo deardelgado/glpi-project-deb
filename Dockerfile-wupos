@@ -1,0 +1,48 @@
+# OS Debian 
+FROM debian:11.6
+
+ARG DEBIAN_FRONTEND noninteractive
+
+# Instalación de apache y php5.5 + extension
+RUN apt update \
+&& apt install --yes  lsb-release wget curl nano \
+&& curl -sSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg \ 
+&& sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list' \
+&& apt update \
+&& apt install --yes --no-install-recommends \
+apache2 \
+php7.2 \
+php7.2-mysql \
+php7.2-ldap \
+php7.2-xmlrpc \
+php7.2-imap \
+php7.2-curl \
+php7.2-gd \
+php7.2-mbstring \
+php7.2-xml \
+php-cas \
+php7.2-intl \
+php7.2-zip \
+php7.2-bz2 \
+php7.2-redis \
+cron \
+jq \
+libldap-2.4-2 \
+libldap-common \
+libsasl2-2 \
+libsasl2-modules \
+libsasl2-modules-db \
+&& rm -rf /var/lib/apt/lists/*
+
+RUN curl -sS https://getcomposer.org/installer | php -- --version=1.10.22 --install-dir=/usr/local/bin --filename=composer
+
+#COPY ./conf/apache2/sites-available/wupos.conf /etc/apache2/sites-available/wupos.conf
+#COPY ./conf/apache2/sites-available/wupos-ssl.conf /etc/apache2/sites-available/wupos-ssl.conf
+
+COPY wupos /var/www/html
+COPY start.sh /opt/
+RUN chmod +x /opt/start.sh
+ENTRYPOINT ["/opt/start.sh"]
+
+# Ports
+EXPOSE 80 8080
