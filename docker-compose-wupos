@@ -1,0 +1,34 @@
+## Wupos
+services:
+  postgres:
+    image: "postgres"
+    container_name: db
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=gyf
+    ports:
+      - 5432:5432
+    volumes:
+      - /data:/var/lib/postgresql/data/
+
+#GLPI Container
+  glpi:
+    build: .
+    #image: dsdelgadomo/glpi
+    container_name : glpi
+    hostname: glpi
+    ports:
+      - "80:80"
+    volumes:
+    #  - /etc/timezone:/etc/timezone:ro - OS Redhat Derivados
+      - /etc/localtime:/etc/localtime:ro
+      - /var/www/html:/var/www/html
+      - ./wupos:/var/www/html/wupos
+      - ./conf/000-default.conf:/etc/apache2/sites-available/000-default.conf
+    environment:
+      - TIMEZONE=America/Bogota
+    restart: always
+    depends_on:
+      - postgres
